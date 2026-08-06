@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Kings for Chess — The Thrill of Chess</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Sora:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-0:#070512;
+    --bg-1:#0d0a24;
+    --ink:#f4f1ff;
+    --muted:#a79fce;
+    --gold:#f7c94b;
+    --violet:#7c4dff;
+    --cyan:#22d3ee;
+    --magenta:#ff4d9d;
+    --glass:rgba(255,255,255,.06);
+    --glass-brd:rgba(255,255,255,.14);
+    --radius:20px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:'Sora',system-ui,sans-serif;
+    background:var(--bg-0);
+    color:var(--ink);
+    overflow-x:hidden;
+    min-height:100vh;
+    position:relative;
+    -webkit-font-smoothing:antialiased;
+  }
+  /* ===== Aurora background ===== */
+  .aurora{position:fixed;inset:0;z-index:0;overflow:hidden;background:
+     radial-gradient(1200px 700px at 50% -10%, #1a1245 0%, transparent 60%),
+     linear-gradient(180deg,#0a0720 0%, #070512 100%);}
+  .blob{position:absolute;border-radius:50%;filter:blur(70px);opacity:.55;mix-blend-mode:screen;animation:drift 18s ease-in-out infinite}
+  .b1{width:520px;height:520px;background:radial-gradient(circle,#7c4dff,transparent 70%);top:-120px;left:-80px}
+  .b2{width:480px;height:480px;background:radial-gradient(circle,#22d3ee,transparent 70%);bottom:-140px;right:-60px;animation-delay:-6s}
+  .b3{width:420px;height:420px;background:radial-gradient(circle,#ff4d9d,transparent 70%);top:40%;left:60%;animation-delay:-11s}
+  @keyframes drift{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(40px,-30px) scale(1.08)}66%{transform:translate(-30px,25px) scale(.96)}}
+  .grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.05;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+
+  /* ===== Shell ===== */
+  .wrap{position:relative;z-index:2;min-height:100vh;display:flex;flex-direction:column;padding:22px clamp(18px,4vw,54px) 30px}
+
+  /* ===== Nav ===== */
+  nav{display:flex;align-items:center;justify-content:space-between;gap:18px}
+  .brand{display:flex;align-items:center;gap:12px;opacity:0;animation:fadeDown .7s .1s forwards}
+  .crest{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:24px;
+    background:linear-gradient(145deg,#2a1d5e,#140d33);border:1px solid var(--glass-brd);
+    box-shadow:0 6px 22px rgba(124,77,255,.35), inset 0 1px 0 rgba(255,255,255,.15)}
+  .crest span{background:linear-gradient(180deg,#ffe08a,#f7c94b);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .brand h1{font-family:'Bricolage Grotesque';font-weight:800;font-size:19px;letter-spacing:.3px;line-height:1}
+  .brand small{display:block;font-size:9.5px;letter-spacing:3px;color:var(--gold);font-weight:600;margin-top:3px}
+  .navlinks{display:flex;gap:8px;opacity:0;animation:fadeDown .7s .2s forwards}
+  .navlinks a{color:var(--muted);text-decoration:none;font-size:14px;font-weight:400;padding:9px 16px;border-radius:999px;transition:.25s}
+  .navlinks a:hover{color:#fff;background:var(--glass)}
+  .navlinks a.active{color:#fff;background:linear-gradient(120deg,rgba(124,77,255,.35),rgba(34,211,238,.2));border:1px solid var(--glass-brd)}
+  .navcta{display:flex;gap:10px;opacity:0;animation:fadeDown .7s .3s forwards}
+  .btn{font-family:'Sora';cursor:pointer;border:none;border-radius:999px;font-size:14px;font-weight:500;padding:11px 20px;transition:.25s;text-decoration:none;display:inline-flex;align-items:center;gap:7px}
+  .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--glass-brd)}
+  .btn.ghost:hover{background:var(--glass)}
+  .btn.gold{background:linear-gradient(120deg,#ffe08a,#f7c94b);color:#231705;font-weight:600;box-shadow:0 8px 26px rgba(247,201,75,.34)}
+  .btn.gold:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(247,201,75,.5)}
+
+  /* ===== Ticker ===== */
+  .ticker{margin:18px 0 6px;display:flex;gap:26px;font-size:12px;letter-spacing:1px;color:var(--muted);
+    text-transform:uppercase;opacity:0;animation:fadeIn .8s .5s forwards;flex-wrap:wrap}
+  .ticker b{color:var(--gold);font-weight:600}
+  .dot{width:5px;height:5px;border-radius:50%;background:var(--cyan);align-self:center;box-shadow:0 0 10px var(--cyan)}
+
+  /* ===== Hero grid ===== */
+  .hero{flex:1;display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(24px,4vw,60px);align-items:center;padding-top:8px}
+  .lede{max-width:520px}
+  .pill{display:inline-flex;align-items:center;gap:8px;font-size:12px;padding:7px 14px;border-radius:999px;
+    background:var(--glass);border:1px solid var(--glass-brd);color:#e9e4ff;margin-bottom:22px;opacity:0;animation:fadeUp .7s .4s forwards}
+  .pill i{font-style:normal;color:var(--magenta)}
+  .lede h2{font-family:'Bricolage Grotesque';font-weight:800;font-size:clamp(42px,6vw,76px);line-height:.94;letter-spacing:-1.5px;opacity:0;animation:fadeUp .8s .5s forwards}
+  .lede h2 .g{background:linear-gradient(100deg,#ffe08a 0%,#f7c94b 30%,#ff4d9d 62%,#7c4dff 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .lede p{color:var(--muted);font-size:16px;line-height:1.6;margin:20px 0 28px;max-width:440px;opacity:0;animation:fadeUp .8s .62s forwards}
+  .lede .row{display:flex;gap:14px;flex-wrap:wrap;opacity:0;animation:fadeUp .8s .74s forwards}
+  .btn.grad{background:linear-gradient(120deg,#7c4dff,#22d3ee);color:#fff;font-weight:600;padding:15px 30px;font-size:15px;box-shadow:0 10px 30px rgba(124,77,255,.45)}
+  .btn.grad:hover{transform:translateY(-2px);filter:brightness(1.08)}
+
+  /* ===== Board stage ===== */
+  .stage{position:relative;display:flex;justify-content:center;align-items:center;perspective:1400px;opacity:0;animation:boardIn 1.1s .5s forwards}
+  .board{position:relative;width:min(430px,80%);aspect-ratio:1;display:grid;grid-template-columns:repeat(8,1fr);grid-template-rows:repeat(8,1fr);
+    border-radius:20px;overflow:hidden;transform:rotateX(46deg) rotateZ(-2deg);transform-style:preserve-3d;
+    box-shadow:0 60px 90px -30px rgba(0,0,0,.8), 0 0 0 1px rgba(255,255,255,.08), 0 0 90px rgba(124,77,255,.35);
+    background:rgba(255,255,255,.03);backdrop-filter:blur(3px)}
+  .sq{position:relative}
+  .sq.d{background:linear-gradient(135deg,rgba(124,77,255,.22),rgba(34,211,238,.12))}
+  .sq.l{background:rgba(255,255,255,.05)}
+  .board::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(255,77,157,.10));pointer-events:none}
+  .piece{position:absolute;font-size:clamp(30px,6.4vw,46px);line-height:1;transform:translate(-50%,-72%);left:50%;top:50%;
+    color:#fff;text-shadow:0 8px 14px rgba(0,0,0,.6);z-index:5;transform-style:preserve-3d;animation:hover 4.5s ease-in-out infinite}
+  .piece.gold{color:#ffdf7e;text-shadow:0 0 18px rgba(247,201,75,.7),0 8px 14px rgba(0,0,0,.6)}
+  .glow{filter:drop-shadow(0 0 14px rgba(34,211,238,.8))}
+  @keyframes hover{0%,100%{transform:translate(-50%,-72%)}50%{transform:translate(-50%,-88%)}}
+
+  /* login card floating over board */
+  .login{position:absolute;right:-6%;bottom:2%;width:min(258px,74%);padding:22px 20px 20px;border-radius:var(--radius);
+    background:linear-gradient(160deg,rgba(30,22,66,.86),rgba(12,9,32,.9));border:1px solid var(--glass-brd);
+    box-shadow:0 30px 60px -20px rgba(0,0,0,.7), inset 0 1px 0 rgba(255,255,255,.12);backdrop-filter:blur(14px);z-index:9;
+    opacity:0;animation:fadeUp .8s 1s forwards}
+  .login h3{font-family:'Bricolage Grotesque';font-size:20px;font-weight:800;margin-bottom:3px}
+  .login .sub{font-size:11.5px;color:var(--muted);margin-bottom:16px}
+  .fld{width:100%;background:rgba(255,255,255,.05);border:1px solid var(--glass-brd);border-radius:11px;
+    padding:11px 13px;color:#fff;font-family:'Sora';font-size:13px;margin-bottom:10px;outline:none;transition:.2s}
+  .fld::placeholder{color:#8b83b6}
+  .fld:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(34,211,238,.18)}
+  .login .btn.gold{width:100%;justify-content:center;margin-top:4px}
+  .login .alt{text-align:center;font-size:11.5px;color:var(--muted);margin-top:12px}
+  .login .alt a{color:var(--gold);text-decoration:none;font-weight:600}
+
+  /* ===== Three panels ===== */
+  .panels{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:26px;opacity:0;animation:fadeUp .8s .9s forwards}
+  .panel{position:relative;padding:22px 22px 20px;border-radius:var(--radius);background:var(--glass);border:1px solid var(--glass-brd);
+    overflow:hidden;transition:.3s;cursor:pointer}
+  .panel::before{content:"";position:absolute;inset:0;opacity:.0;transition:.3s;
+    background:radial-gradient(340px 160px at 20% 0%,var(--c),transparent 70%)}
+  .panel:hover{transform:translateY(-6px);border-color:rgba(255,255,255,.28)}
+  .panel:hover::before{opacity:.5}
+  .panel .ic{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-size:22px;margin-bottom:14px;
+    background:rgba(255,255,255,.06);border:1px solid var(--glass-brd);position:relative}
+  .panel h4{font-family:'Bricolage Grotesque';font-size:20px;font-weight:800;margin-bottom:6px;position:relative}
+  .panel p{font-size:13px;color:var(--muted);line-height:1.5;position:relative;margin-bottom:14px}
+  .panel .go{font-size:13px;font-weight:600;color:#fff;display:inline-flex;gap:6px;align-items:center;position:relative}
+  .panel .go .arr{transition:.25s}
+  .panel:hover .go .arr{transform:translateX(5px)}
+  .p1{--c:rgba(124,77,255,.45)} .p2{--c:rgba(247,201,75,.4)} .p3{--c:rgba(255,77,157,.42)}
+
+  /* ===== Social dock ===== */
+  .social{position:fixed;right:20px;bottom:20px;z-index:20;display:flex;gap:10px;opacity:0;animation:fadeIn 1s 1.3s forwards}
+  .social a{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;color:#fff;text-decoration:none;
+    background:linear-gradient(160deg,rgba(30,22,66,.9),rgba(12,9,32,.9));border:1px solid var(--glass-brd);transition:.25s;
+    box-shadow:0 8px 20px rgba(0,0,0,.4)}
+  .social a:hover{transform:translateY(-4px)}
+  .social a.ig:hover{background:linear-gradient(135deg,#f9ce34,#ee2a7b,#6228d7)}
+  .social a.fb:hover{background:#1877f2}
+  .social a.yt:hover{background:#ff0000}
+  .social svg{width:20px;height:20px;fill:currentColor}
+
+  /* ===== Animations ===== */
+  @keyframes fadeDown{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:none}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  @keyframes boardIn{from{opacity:0;transform:translateY(40px) scale(.9)}to{opacity:1;transform:none}}
+
+  /* ===== Responsive ===== */
+  @media(max-width:960px){
+    .hero{grid-template-columns:1fr;gap:22px;padding-top:14px}
+    .navlinks{display:none}
+    .stage{order:-1;flex-direction:column;gap:6px}
+    .board{transform:rotateX(34deg) rotateZ(-2deg);width:min(320px,80%);margin-bottom:-6%}
+    .login{position:relative;right:auto;bottom:auto;margin:14px auto 0;width:min(300px,92%)}
+    .panels{grid-template-columns:1fr;gap:12px}
+    .social{right:14px;bottom:14px}
+  }
+  @media(max-width:520px){
+    .brand small{display:none}
+    .ticker{gap:14px;font-size:10.5px}
+  }
+</style>
+</head>
+<body>
+  <div class="aurora"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+  <div class="grain"></div>
+
+  <div class="wrap">
+    <!-- NAV -->
+    <nav>
+      <div class="brand">
+        <div class="crest"><span>♚</span></div>
+        <div><h1>KINGS FOR CHESS</h1><small>THE THRILL OF CHESS</small></div>
+      </div>
+      <div class="navlinks">
+        <a href="#" class="active">Home</a>
+        <a href="#">Play</a>
+        <a href="#">Tournaments</a>
+        <a href="#">Leaderboard</a>
+      </div>
+      <div class="navcta">
+        <a href="#" class="btn ghost">Log in</a>
+        <a href="#" class="btn gold">Sign up</a>
+      </div>
+    </nav>
+
+    <div class="ticker">
+      <span><b>50+</b> Active Players</span><span class="dot"></span>
+      <span><b>1M+</b> Games Played</span><span class="dot"></span>
+      <span><b>24/7</b> Live Matches</span><span class="dot"></span>
+      <span><b>2</b> Exclusive Variants</span>
+    </div>
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="lede">
+        <div class="pill"><i>◆</i> New — Evolutionary &amp; Stalemate-Penalty modes</div>
+        <h2>The next<br>evolution of<br><span class="g">esports chess.</span></h2>
+        <p>Play No-Checkmate king-capture battles, climb variant-specific leaderboards, and get chess.com-grade post-game analysis — on web and mobile.</p>
+        <div class="row">
+          <a href="#" class="btn grad">Play now ▸</a>
+          <a href="#" class="btn ghost">Explore modes</a>
+        </div>
+      </div>
+
+      <!-- BOARD STAGE -->
+      <div class="stage">
+        <div class="board" id="board"></div>
+        <div class="login">
+          <h3>Enter the arena</h3>
+          <div class="sub">Sign in to play, rank up &amp; analyse.</div>
+          <input class="fld" type="email" placeholder="Email address">
+          <input class="fld" type="password" placeholder="Password">
+          <a href="#" class="btn gold">Sign in &amp; play</a>
+          <div class="alt">New here? <a href="#">Create free account</a></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- THREE PANELS -->
+    <section class="panels">
+      <div class="panel p1">
+        <div class="ic">♟</div>
+        <h4>Join</h4>
+        <p>Create a free account and jump into ranked play against humans or calibrated AI in seconds.</p>
+        <span class="go">Get started <span class="arr">→</span></span>
+      </div>
+      <div class="panel p2">
+        <div class="ic">♛</div>
+        <h4>Membership</h4>
+        <p>Unlock advanced analysis, an AI coach, and 60 exclusive boards, pieces &amp; colours only members wear.</p>
+        <span class="go">See plans <span class="arr">→</span></span>
+      </div>
+      <div class="panel p3">
+        <div class="ic">♜</div>
+        <h4>Tournaments</h4>
+        <p>League, round-robin or hybrid formats with your own rules. Compete for the crown, live.</p>
+        <span class="go">Browse events <span class="arr">→</span></span>
+      </div>
+    </section>
+  </div>
+
+  <!-- SOCIAL DOCK -->
+  <div class="social">
+    <a class="ig" href="#" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.9.07 1.2.06 1.8.25 2.2.42.6.2 1 .5 1.4.9.4.4.7.8.9 1.4.17.4.36 1 .42 2.2.06 1.3.07 1.7.07 4.9s0 3.6-.07 4.9c-.06 1.2-.25 1.8-.42 2.2-.2.6-.5 1-.9 1.4-.4.4-.8.7-1.4.9-.4.17-1 .36-2.2.42-1.3.06-1.7.07-4.9.07s-3.6 0-4.9-.07c-1.2-.06-1.8-.25-2.2-.42-.6-.2-1-.5-1.4-.9-.4-.4-.7-.8-.9-1.4-.17-.4-.36-1-.42-2.2C2.21 15.6 2.2 15.2 2.2 12s0-3.6.07-4.9c.06-1.2.25-1.8.42-2.2.2-.6.5-1 .9-1.4.4-.4.8-.7 1.4-.9.4-.17 1-.36 2.2-.42C8.4 2.21 8.8 2.2 12 2.2zm0 3.3A6.5 6.5 0 1018.5 12 6.5 6.5 0 0012 5.5zm0 10.7A4.2 4.2 0 1116.2 12 4.2 4.2 0 0112 16.2zm6.8-11a1.5 1.5 0 11-1.5-1.5 1.5 1.5 0 011.5 1.5z"/></svg></a>
+    <a class="fb" href="#" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M22 12a10 10 0 10-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.2c-1.2 0-1.6.75-1.6 1.5V12h2.7l-.4 2.9h-2.3v7A10 10 0 0022 12z"/></svg></a>
+    <a class="yt" href="#" aria-label="YouTube"><svg viewBox="0 0 24 24"><path d="M23.5 6.5a3 3 0 00-2.1-2.1C19.5 3.9 12 3.9 12 3.9s-7.5 0-9.4.5A3 3 0 00.5 6.5 31 31 0 000 12a31 31 0 00.5 5.5 3 3 0 002.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 002.1-2.1A31 31 0 0024 12a31 31 0 00-.5-5.5zM9.6 15.6V8.4l6.3 3.6z"/></svg></a>
+  </div>
+
+<script>
+  // Build 8x8 glass board + place pieces
+  const board = document.getElementById('board');
+  const pieces = {
+    0:{p:'♜'},1:{p:'♞'},2:{p:'♝'},3:{p:'♛',g:1},4:{p:'♚',g:1},5:{p:'♝'},6:{p:'♞'},7:{p:'♜'},
+    8:{p:'♟'},9:{p:'♟'},10:{p:'♟'},11:{p:'♟'},12:{p:'♟'},13:{p:'♟'},14:{p:'♟'},15:{p:'♟'},
+    27:{p:'♙',glow:1},36:{p:'♙',glow:1},
+    48:{p:'♙'},49:{p:'♙'},50:{p:'♙'},51:{p:'♙'},52:{p:'♙'},53:{p:'♙'},54:{p:'♙'},55:{p:'♙'},
+    56:{p:'♖'},57:{p:'♘'},58:{p:'♗'},59:{p:'♕',g:1},60:{p:'♔',g:1},61:{p:'♗'},62:{p:'♘'},63:{p:'♖'}
+  };
+  for(let i=0;i<64;i++){
+    const r=Math.floor(i/8), c=i%8;
+    const sq=document.createElement('div');
+    sq.className='sq '+(((r+c)%2)?'d':'l');
+    if(pieces[i]){
+      const pc=document.createElement('div');
+      pc.className='piece'+(pieces[i].g?' gold':'')+(pieces[i].glow?' glow':'');
+      pc.textContent=pieces[i].p;
+      pc.style.animationDelay=(-(i%9)*0.35)+'s';
+      sq.appendChild(pc);
+    }
+    board.appendChild(sq);
+  }
+</script>
+</body>
+</html>
